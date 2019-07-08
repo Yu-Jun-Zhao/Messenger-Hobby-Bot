@@ -1,0 +1,20 @@
+{
+  "name": "hobby-chat-bot",
+  "version": "1.0.0",
+  "description": "Messenger Bot for hobby related work",
+  "main": "server.js",
+  "scripts": {
+    "start": "node ./server.js",
+    "build": "./node_modules/.bin/tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yu Jun Zhao",
+  "license": "ISC",
+  "dependencies": {
+    "botbuilder": "^4.4.0",
+    "botbuilder-ai": "^4.4.0",
+    "dotenv": "^8.0.0",
+    "restify": "^8.3.3",
+    "typescript": "^3.5.2"
+  }
+}
