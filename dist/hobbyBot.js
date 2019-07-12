@@ -23,6 +23,7 @@ class HobbyBot extends botbuilder_1.ActivityHandler {
             yield next();
         }));
         this.onDialog((turnContext, next) => __awaiter(this, void 0, void 0, function* () {
+            yield this._conversationState.saveChanges(turnContext, false);
             yield next();
         }));
     }

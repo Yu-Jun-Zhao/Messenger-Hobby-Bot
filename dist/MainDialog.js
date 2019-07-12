@@ -9,7 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const botbuilder_dialogs_1 = require("botbuilder-dialogs");
+const regularDialog_1 = require("./regularDialog");
 const MAIN_WATERFALL_DIALOG = "mainWaterFallDialog";
+const REGULAR_DIALOG = "regularDialog";
 const CONVERSATION_TEXT = "conversationText";
 class MainDialog extends botbuilder_dialogs_1.ComponentDialog {
     constructor(botName) {
@@ -19,7 +21,9 @@ class MainDialog extends botbuilder_dialogs_1.ComponentDialog {
             this.introStep.bind(this),
             this.actStep.bind(this),
             this.finalStep.bind(this)
-        ])).addDialog(new botbuilder_dialogs_1.TextPrompt(CONVERSATION_TEXT));
+        ]))
+            .addDialog(new botbuilder_dialogs_1.TextPrompt(CONVERSATION_TEXT))
+            .addDialog(new regularDialog_1.default(REGULAR_DIALOG));
         this.initialDialogId = MAIN_WATERFALL_DIALOG;
     }
     run(turnContext, accessor) {
@@ -41,13 +45,15 @@ class MainDialog extends botbuilder_dialogs_1.ComponentDialog {
                 return yield stepContext.next();
             }
             yield stepContext.context.sendActivity(`My name is ${this._botName}. I am pleased to serve you.`);
-            return Promise.resolve(stepContext.prompt(CONVERSATION_TEXT, {
+            return yield stepContext.prompt(CONVERSATION_TEXT, {
                 prompt: `What can I help you with? Ask for help if you don't know what I can do.`
-            }));
+            });
         });
     }
     actStep(stepContext) {
-        return __awaiter(this, void 0, void 0, function* () { });
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield stepContext.beginDialog(REGULAR_DIALOG);
+        });
     }
     finalStep(stepContext) {
         return __awaiter(this, void 0, void 0, function* () { });

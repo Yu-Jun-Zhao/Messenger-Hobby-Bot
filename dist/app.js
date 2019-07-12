@@ -18,6 +18,11 @@ const adapter = new botbuilder_1.BotFrameworkAdapter({
     appId: process.env.MicrosoftAppId,
     appPassword: process.env.MicrosoftAppPassword
 });
+adapter.onTurnError = (context, error) => __awaiter(this, void 0, void 0, function* () {
+    console.error(`\n [onTurnError]: ${error}`);
+    yield context.sendActivity("Oops something went wrong");
+    yield conversationState.delete(context);
+});
 const memoryStorage = new botbuilder_1.MemoryStorage();
 const conversationState = new botbuilder_1.ConversationState(memoryStorage);
 const userState = new botbuilder_1.UserState(memoryStorage);

@@ -15,6 +15,10 @@ class CancelAndHelpDialog extends botbuilder_dialogs_1.ComponentDialog {
             onBeginDialog: { get: () => super.onBeginDialog }
         });
         return __awaiter(this, void 0, void 0, function* () {
+            const result = yield this.interrupt(innerDialogContext);
+            if (result) {
+                return result;
+            }
             return _super.onBeginDialog.call(this, innerDialogContext, options);
         });
     }
@@ -23,11 +27,27 @@ class CancelAndHelpDialog extends botbuilder_dialogs_1.ComponentDialog {
             onContinueDialog: { get: () => super.onContinueDialog }
         });
         return __awaiter(this, void 0, void 0, function* () {
+            const result = yield this.interrupt(innerDialogContext);
+            if (result) {
+                return result;
+            }
             return _super.onContinueDialog.call(this, innerDialogContext);
         });
     }
     interrupt(innerDialogContext) {
-        return __awaiter(this, void 0, void 0, function* () { });
+        return __awaiter(this, void 0, void 0, function* () {
+            const text = innerDialogContext.context.activity.text.toLowerCase();
+            switch (text) {
+                case "text":
+                case "?":
+                    yield innerDialogContext.context.sendActivity("helping");
+                    return { status: botbuilder_dialogs_1.DialogTurnStatus.waiting };
+                case "cancel":
+                case "quit":
+                    yield innerDialogContext.context.sendActivity("Cancelling");
+                    return yield innerDialogContext.cancelAllDialogs();
+            }
+        });
     }
 }
 exports.default = CancelAndHelpDialog;
