@@ -23,7 +23,10 @@ class RegularDialog extends cancelAndHelpDialog_1.default {
     actStep(stepContext) {
         return __awaiter(this, void 0, void 0, function* () {
             const answers = yield this._qnaHelper.qnaQuery(stepContext.context);
-            yield stepContext.context.sendActivity(answers[0].answer);
+            if (answers[0])
+                yield stepContext.context.sendActivity(answers[0].answer);
+            else
+                yield stepContext.context.sendActivity("Sorry. I do not understand what you just said.");
             return yield stepContext.endDialog();
         });
     }

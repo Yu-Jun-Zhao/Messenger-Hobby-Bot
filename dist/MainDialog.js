@@ -10,30 +10,37 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const botbuilder_dialogs_1 = require("botbuilder-dialogs");
 const regularDialog_1 = require("./regularDialog");
-const MAIN_WATERFALL_DIALOG = "mainWaterFallDialog";
+const NEW_WATERFALL_DIALOG = "newWaterFallDialog";
+const CONTINUE_WATERFALL_DIALOG = "continueWaterFallDialog";
 const REGULAR_DIALOG = "regularDialog";
 const CONVERSATION_TEXT = "conversationText";
 class MainDialog extends botbuilder_dialogs_1.ComponentDialog {
     constructor(botName) {
         super("MainDialog");
         this._botName = botName;
-        this.addDialog(new botbuilder_dialogs_1.WaterfallDialog(MAIN_WATERFALL_DIALOG, [
+        this.addDialog(new botbuilder_dialogs_1.WaterfallDialog(NEW_WATERFALL_DIALOG, [
             this.introStep.bind(this),
             this.actStep.bind(this),
             this.finalStep.bind(this)
         ]))
+            .addDialog(new botbuilder_dialogs_1.WaterfallDialog(CONTINUE_WATERFALL_DIALOG, [this.actStep, this.finalStep]))
             .addDialog(new botbuilder_dialogs_1.TextPrompt(CONVERSATION_TEXT))
             .addDialog(new regularDialog_1.default(REGULAR_DIALOG));
-        this.initialDialogId = MAIN_WATERFALL_DIALOG;
+        this.initialDialogId = NEW_WATERFALL_DIALOG;
     }
     run(turnContext, accessor) {
         return __awaiter(this, void 0, void 0, function* () {
+            const conversationData = yield accessor.get(turnContext, { conversationData: false });
+            if (conversationData.continueConversation) {
+                this.initialDialogId = CONTINUE_WATERFALL_DIALOG;
+            }
             const dialogSet = new botbuilder_dialogs_1.DialogSet(accessor);
             console.log(accessor);
             dialogSet.add(this);
             const dialogContext = yield dialogSet.createContext(turnContext);
             const result = yield dialogContext.continueDialog();
             if (result.status === botbuilder_dialogs_1.DialogTurnStatus.empty) {
+                conversationData.continueConversation = true;
                 yield dialogContext.beginDialog(this.id);
             }
         });
@@ -56,7 +63,9 @@ class MainDialog extends botbuilder_dialogs_1.ComponentDialog {
         });
     }
     finalStep(stepContext) {
-        return __awaiter(this, void 0, void 0, function* () { });
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield stepContext.endDialog();
+        });
     }
 }
 exports.default = MainDialog;
