@@ -23,22 +23,55 @@ class LuisHelper {
             const intent = botbuilder_ai_1.LuisRecognizer.topIntent(recognizerResult, "None", 0.7);
             let intentData = {
                 intent,
-                score: recognizerResult.intents["SearchWeather"].score
+                score: intent !== "None" ? recognizerResult.intents[intent].score : 0,
+                data: {}
             };
             switch (intentData.intent) {
-                case "SearchWeather":
+                case "SearchWeather": {
+                    const city = LuisHelper.geographyEntity(recognizerResult);
+                    const date = LuisHelper.parseDateTimeEntity(recognizerResult);
+                    intentData.data = {
+                        city,
+                        date
+                    };
                     break;
+                }
                 case "Find":
                     break;
                 case "FindVideo":
                     break;
                 case "Cancel":
                     break;
-                case "None":
-                    break;
             }
             return intentData;
         });
+    }
+    static parseEntity(recognizerResult, entityName) {
+        const entity = recognizerResult.entities[entityName];
+        if (!entity || !entity[0])
+            return undefined;
+        return entity[0];
+    }
+    static geographyEntity(recognizerResult) {
+        const geoEntity = recognizerResult.entities["geographyV2_city"];
+        if (!geoEntity || !geoEntity[0])
+            return undefined;
+        const nameArr = geoEntity[0].split(" ");
+        const name = nameArr
+            .map(element => {
+            return element.charAt(0).toUpperCase() + element.slice(1);
+        })
+            .join(" ");
+        return name;
+    }
+    static parseDateTimeEntity(recognizerResult) {
+        const dateTimeEntity = recognizerResult.entities["datetime"];
+        if (!dateTimeEntity || !dateTimeEntity[0])
+            return undefined;
+        const timex = dateTimeEntity[0]["timex"];
+        if (!timex || !timex[0])
+            return undefined;
+        return timex[0].split("T")[0];
     }
 }
 exports.default = LuisHelper;

@@ -38,7 +38,7 @@ class CancelAndHelpDialog extends botbuilder_dialogs_1.ComponentDialog {
         return __awaiter(this, void 0, void 0, function* () {
             const text = innerDialogContext.context.activity.text.toLowerCase();
             switch (text) {
-                case "text":
+                case "help":
                 case "?":
                     yield innerDialogContext.context.sendActivity("helping");
                     return { status: botbuilder_dialogs_1.DialogTurnStatus.waiting };

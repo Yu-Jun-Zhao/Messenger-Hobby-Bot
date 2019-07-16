@@ -11,10 +11,13 @@
   "author": "Yu Jun Zhao",
   "license": "ISC",
   "dependencies": {
+    "all-the-cities": "^2.0.1",
     "botbuilder": "^4.4.0",
     "botbuilder-ai": "^4.4.0",
     "botbuilder-dialogs": "^4.4.0",
+    "country-list": "^2.1.1",
     "dotenv": "^8.0.0",
+    "moment": "^2.24.0",
     "restify": "^8.3.3",
     "typescript": "^3.5.2"
   }
