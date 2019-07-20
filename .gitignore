@@ -67,7 +67,7 @@ typings/
 luis/*.json
 .qnamakerrc
 .luisrc
-lib/
+
 
 upload.zip
 edui2018-bot.zip
