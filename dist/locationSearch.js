@@ -11,7 +11,6 @@ class LocationSearch {
     }
     static getCountryCode(cityName) {
         const cityArray = LocationSearch.getCitiesInfo(cityName);
-        console.log(cityArray);
         if (cityArray.length === 1) {
             return cityArray[0].country;
         }

@@ -9,6 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const botbuilder_ai_1 = require("botbuilder-ai");
+const moment = require("moment");
+const momentTimezone = require("moment-timezone");
+const MOMENT_ARR_DATE_PARSE = ["MM-DD-YYYY", "YYYY-MM-DD", "M-D-YYYY", "YYYY-M-D", "M-DD-YYYY", "YYYY-MM-D"];
 class LuisHelper {
     constructor() {
         this._luisRecognizer = new botbuilder_ai_1.LuisRecognizer({
@@ -71,7 +74,44 @@ class LuisHelper {
         const timex = dateTimeEntity[0]["timex"];
         if (!timex || !timex[0])
             return undefined;
-        return timex[0].split("T")[0];
+        const now = momentTimezone()
+            .tz("America/Los_Angeles")
+            .format("YYYY-MM-DD");
+        const utc = moment(momentTimezone()
+            .tz("Africa/Abidjan")
+            .format("YYYY-MM-DD"));
+        const text = recognizerResult.text;
+        const regex = /(\d{4}|\d{2}|\d{1})[./-](\d{2}|\d{1})[./-](\d{4}|\d{2}|\d{1})/;
+        const parsedArr = text.match(regex);
+        const dateData = {};
+        console.log("parsedArr-->" + parsedArr);
+        if (parsedArr && parsedArr.length > 0 && moment(parsedArr[0], MOMENT_ARR_DATE_PARSE).isValid()) {
+            dateData.pdt = moment(parsedArr[0], MOMENT_ARR_DATE_PARSE).format("YYYY-MM-DD");
+            dateData.utc = moment(parsedArr[0], MOMENT_ARR_DATE_PARSE).format("YYYY-MM-DD");
+            dateData.currentDay = dateData.pdt !== now ? false : true;
+            return dateData;
+        }
+        const diffByDay = utc.diff(now, "days");
+        console.log("utc: " + utc + " now:" + now + " different by days: " + diffByDay);
+        dateData.utc =
+            timex[0] !== "PRESENT_REF"
+                ? moment(timex[0], "YYYY-MM-DD")
+                    .subtract({ days: diffByDay })
+                    .format("YYYY-MM-DD")
+                : momentTimezone()
+                    .tz("Africa/Abidjan")
+                    .format("YYYY-MM-DD");
+        dateData.pdt =
+            timex[0] !== "PRESENT_REF"
+                ? dateData.utc
+                : momentTimezone()
+                    .tz("America/Los_Angeles")
+                    .format("YYYY-MM-DD");
+        if (timex[0] === "PRESENT_REF" || timex[0].split("T")[0] === moment(utc).format("YYYY-MM-DD"))
+            dateData.currentDay = true;
+        else
+            dateData.currentDay = false;
+        return dateData;
     }
 }
 exports.default = LuisHelper;
