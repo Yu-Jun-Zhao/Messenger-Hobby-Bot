@@ -38,8 +38,11 @@ class LuisHelper {
         break;
       }
       case "Find":
-        break;
-      case "FindVideo":
+        const name = LuisHelper.parseEntity(recognizerResult, "itemName");
+        //const itemType = LuisHelper.parseEntity(recognizerResult, "");
+        intentData.data = {
+          name
+        };
         break;
       case "Cancel":
         break;
@@ -48,6 +51,7 @@ class LuisHelper {
   }
 
   static parseEntity(recognizerResult: RecognizerResult, entityName: string): string {
+    console.log(recognizerResult.entities);
     const entity = recognizerResult.entities[entityName];
     if (!entity || !entity[0]) return undefined;
 
@@ -72,7 +76,7 @@ class LuisHelper {
     return name;
   }
 
-  //TODO
+  //TODO: Fix mini bug
   //Depreciated way of parsing date: Does not accurately parse date with words: September, October, etc
   // Will be enhanced in later version
   static parseDateTimeEntity(recognizerResult: RecognizerResult): DateData {

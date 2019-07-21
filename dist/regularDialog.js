@@ -13,9 +13,12 @@ const botbuilder_dialogs_1 = require("botbuilder-dialogs");
 const qnaHelper_1 = require("./qnaHelper");
 const luisHelper_1 = require("./luisHelper");
 const searchWeatherDialog_1 = require("./searchWeatherDialog");
+const findDialog_1 = require("./findDialog");
 const WATERFALL_DIALOG = "waterFallDialog";
 const TEXT_PROMPT = "textPrompt";
 const SEARCH_WEATHER_DIALOG = "searchWeatherDialog";
+const FIND_DIALOG = "findDialog";
+const FIND_VIDEO_DIALOG = "findVideoDialog";
 class RegularDialog extends cancelAndHelpDialog_1.default {
     constructor(id) {
         super(id || "regularDialog");
@@ -23,7 +26,8 @@ class RegularDialog extends cancelAndHelpDialog_1.default {
         this._luisHelper = new luisHelper_1.default();
         this.addDialog(new botbuilder_dialogs_1.TextPrompt(TEXT_PROMPT))
             .addDialog(new botbuilder_dialogs_1.WaterfallDialog(WATERFALL_DIALOG, [this.actStep.bind(this)]))
-            .addDialog(new searchWeatherDialog_1.default(SEARCH_WEATHER_DIALOG));
+            .addDialog(new searchWeatherDialog_1.default(SEARCH_WEATHER_DIALOG))
+            .addDialog(new findDialog_1.FindDialog(FIND_DIALOG));
         this.initialDialogId = WATERFALL_DIALOG;
     }
     actStep(stepContext) {
@@ -34,9 +38,10 @@ class RegularDialog extends cancelAndHelpDialog_1.default {
             const intentScore = intentDetail.score;
             if (intentScore >= qnaScore && intentScore >= 0.7) {
                 switch (intentDetail.intent) {
-                    case "SearchWeather": {
+                    case "SearchWeather":
                         return yield stepContext.beginDialog(SEARCH_WEATHER_DIALOG, intentDetail.data);
-                    }
+                    case "Find":
+                        return yield stepContext.beginDialog(FIND_DIALOG, intentDetail.data);
                 }
             }
             else if (answers[0]) {

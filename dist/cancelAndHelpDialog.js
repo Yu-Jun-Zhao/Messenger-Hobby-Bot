@@ -40,7 +40,7 @@ class CancelAndHelpDialog extends botbuilder_dialogs_1.ComponentDialog {
             switch (text) {
                 case "help":
                 case "?":
-                    yield innerDialogContext.context.sendActivity("helping");
+                    yield innerDialogContext.context.sendActivity("You could \n1. Weather Forecast. Ask me: What is the weather?\nOR Type quit to quit. ");
                     return { status: botbuilder_dialogs_1.DialogTurnStatus.waiting };
                 case "cancel":
                 case "quit":

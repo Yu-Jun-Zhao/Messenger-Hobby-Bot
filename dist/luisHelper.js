@@ -40,8 +40,10 @@ class LuisHelper {
                     break;
                 }
                 case "Find":
-                    break;
-                case "FindVideo":
+                    const name = LuisHelper.parseEntity(recognizerResult, "itemName");
+                    intentData.data = {
+                        name
+                    };
                     break;
                 case "Cancel":
                     break;
@@ -50,6 +52,7 @@ class LuisHelper {
         });
     }
     static parseEntity(recognizerResult, entityName) {
+        console.log(recognizerResult.entities);
         const entity = recognizerResult.entities[entityName];
         if (!entity || !entity[0])
             return undefined;

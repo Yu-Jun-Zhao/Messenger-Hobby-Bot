@@ -83,6 +83,7 @@ class MainDialog extends ComponentDialog {
     return await stepContext.beginDialog(REGULAR_DIALOG);
   }
 
+  // for saving purposes. for now not used.
   async finalStep(stepContext: WaterfallStepContext): Promise<DialogTurnResult> {
     return await stepContext.endDialog();
   }

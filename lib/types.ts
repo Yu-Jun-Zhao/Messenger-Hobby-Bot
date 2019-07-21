@@ -18,7 +18,11 @@ export interface WeatherData extends Data {
   //weather?: string; // sunny rainy etc
 }
 
-export interface YoutubeData extends Data {}
+export interface YoutubeData extends Data {
+  name?: string;
+  itemType?: string; // video or product
+  platform?: string; // youtube or amazon
+}
 
 export interface IntentDetail {
   intent: string;

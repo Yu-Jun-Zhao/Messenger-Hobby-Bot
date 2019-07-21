@@ -5,10 +5,13 @@ import { QnAMakerResult } from "botbuilder-ai";
 import LuisHelper from "./luisHelper";
 import { IntentDetail, WeatherData } from "./types";
 import SearchWeatherDialog from "./searchWeatherDialog";
+import { FindDialog } from "./findDialog";
 
 const WATERFALL_DIALOG = "waterFallDialog";
 const TEXT_PROMPT = "textPrompt";
 const SEARCH_WEATHER_DIALOG = "searchWeatherDialog";
+const FIND_DIALOG = "findDialog";
+const FIND_VIDEO_DIALOG = "findVideoDialog";
 
 class RegularDialog extends CancelAndHelpDialog {
   private _qnaHelper: QnAHelper;
@@ -21,7 +24,8 @@ class RegularDialog extends CancelAndHelpDialog {
 
     this.addDialog(new TextPrompt(TEXT_PROMPT))
       .addDialog(new WaterfallDialog(WATERFALL_DIALOG, [this.actStep.bind(this)]))
-      .addDialog(new SearchWeatherDialog(SEARCH_WEATHER_DIALOG));
+      .addDialog(new SearchWeatherDialog(SEARCH_WEATHER_DIALOG))
+      .addDialog(new FindDialog(FIND_DIALOG));
 
     this.initialDialogId = WATERFALL_DIALOG;
   }
@@ -38,9 +42,11 @@ class RegularDialog extends CancelAndHelpDialog {
     if (intentScore >= qnaScore && intentScore >= 0.7) {
       // intents
       switch (intentDetail.intent) {
-        case "SearchWeather": {
+        case "SearchWeather":
           return await stepContext.beginDialog(SEARCH_WEATHER_DIALOG, intentDetail.data);
-        }
+
+        case "Find":
+          return await stepContext.beginDialog(FIND_DIALOG, intentDetail.data);
       }
     } else if (answers[0]) {
       // qna
