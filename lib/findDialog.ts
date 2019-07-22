@@ -39,20 +39,20 @@ export class FindDialog extends CancelAndHelpDialog {
   async choiceStep(stepContext: WaterfallStepContext): Promise<DialogTurnResult> {
     const youtubeData: YoutubeData = stepContext.options;
 
-    if (!youtubeData.itemType) {
+    if (!youtubeData.itemType && !youtubeData.platform) {
       return await stepContext.prompt(CHOOSE_PROMPT, {
-        prompt: "video or products(Not supported yet)",
+        prompt: "video or products(Not supported yet)?",
         choices: ["video", "product"]
       });
     }
 
-    return await stepContext.next(youtubeData.itemType);
+    return await stepContext.next({ value: youtubeData.itemType });
   }
 
   async nameStep(stepContext: WaterfallStepContext): Promise<DialogTurnResult> {
     const youtubeData: YoutubeData = stepContext.options;
 
-    youtubeData.itemType = stepContext.result;
+    youtubeData.itemType = stepContext.result.value;
     if (!youtubeData.name) {
       return await stepContext.prompt(TEXT_PROMPT, {
         prompt: `What is the ${youtubeData.itemType} name?`
@@ -66,6 +66,12 @@ export class FindDialog extends CancelAndHelpDialog {
     const youtubeData: YoutubeData = stepContext.options;
 
     youtubeData.name = stepContext.result;
+    console.log(youtubeData);
+    // platform takes priority
+    if (youtubeData.platform === "youtube") {
+      return await stepContext.beginDialog(START_VIDEO_WATERFALL, stepContext.options);
+    } else if (youtubeData.platform === "amazon") {
+    }
 
     if (youtubeData.itemType === "video") {
       return await stepContext.beginDialog(START_VIDEO_WATERFALL, stepContext.options);
@@ -96,7 +102,14 @@ export class FindVideoDialog extends CancelAndHelpDialog {
 
   // handles youtube api
   async apiStep(stepContext: WaterfallStepContext): Promise<DialogTurnResult> {
+    const youtubeData: YoutubeData = stepContext.options;
+
     const numOfVideo = stepContext.result;
+    await stepContext.context.sendActivity(
+      `Searching for ${youtubeData.name} on Youtube. Testing #${numOfVideo}. Testing itemType: ${
+        youtubeData.itemType
+      }. Testing platform: ${youtubeData.platform}`
+    );
 
     return await stepContext.endDialog();
   }

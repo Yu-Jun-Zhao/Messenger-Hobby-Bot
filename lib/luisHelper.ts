@@ -38,10 +38,13 @@ class LuisHelper {
         break;
       }
       case "Find":
-        const name = LuisHelper.parseEntity(recognizerResult, "itemName");
-        //const itemType = LuisHelper.parseEntity(recognizerResult, "");
+        const name = LuisHelper.parsePatternAny(recognizerResult, "itemName");
+        const itemType = LuisHelper.getEntityType(recognizerResult, "video", "product");
+        const platform = LuisHelper.parseListEntity(recognizerResult, "platform");
         intentData.data = {
-          name
+          name,
+          itemType,
+          platform
         };
         break;
       case "Cancel":
@@ -50,12 +53,32 @@ class LuisHelper {
     return intentData;
   }
 
-  static parseEntity(recognizerResult: RecognizerResult, entityName: string): string {
-    console.log(recognizerResult.entities);
+  //get the name of the entity
+  // returns video or product or ....
+  static getEntityType(recognizerResult: RecognizerResult, ...entityNames: string[]): string {
+    for (let i = 0; i < entityNames.length; i++) {
+      const entity = recognizerResult.entities[entityNames[i]];
+      if (entity) return entityNames[i];
+    }
+
+    return undefined;
+  }
+
+  static parsePatternAny(recognizerResult: RecognizerResult, entityName: string): string {
+    const entity = recognizerResult.entities[entityName];
+    if (!entity || !entity[0]) return undefined;
+    return entity[0];
+  }
+
+  // get the text value within the entity
+  static parseListEntity(recognizerResult: RecognizerResult, entityName: string): string {
+    //console.log(recognizerResult.entities);
     const entity = recognizerResult.entities[entityName];
     if (!entity || !entity[0]) return undefined;
 
-    return entity[0];
+    const itemName = entity[0][0]; // list parsing
+
+    return itemName;
   }
 
   static geographyEntity(recognizerResult: RecognizerResult): string {

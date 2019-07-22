@@ -21,7 +21,7 @@ export interface WeatherData extends Data {
 export interface YoutubeData extends Data {
   name?: string;
   itemType?: string; // video or product
-  platform?: string; // youtube or amazon
+  platform?: string; // youtube or amazon. This takes priority
 }
 
 export interface IntentDetail {

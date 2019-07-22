@@ -40,9 +40,13 @@ class LuisHelper {
                     break;
                 }
                 case "Find":
-                    const name = LuisHelper.parseEntity(recognizerResult, "itemName");
+                    const name = LuisHelper.parsePatternAny(recognizerResult, "itemName");
+                    const itemType = LuisHelper.getEntityType(recognizerResult, "video", "product");
+                    const platform = LuisHelper.parseListEntity(recognizerResult, "platform");
                     intentData.data = {
-                        name
+                        name,
+                        itemType,
+                        platform
                     };
                     break;
                 case "Cancel":
@@ -51,12 +55,26 @@ class LuisHelper {
             return intentData;
         });
     }
-    static parseEntity(recognizerResult, entityName) {
-        console.log(recognizerResult.entities);
+    static getEntityType(recognizerResult, ...entityNames) {
+        for (let i = 0; i < entityNames.length; i++) {
+            const entity = recognizerResult.entities[entityNames[i]];
+            if (entity)
+                return entityNames[i];
+        }
+        return undefined;
+    }
+    static parsePatternAny(recognizerResult, entityName) {
         const entity = recognizerResult.entities[entityName];
         if (!entity || !entity[0])
             return undefined;
         return entity[0];
+    }
+    static parseListEntity(recognizerResult, entityName) {
+        const entity = recognizerResult.entities[entityName];
+        if (!entity || !entity[0])
+            return undefined;
+        const itemName = entity[0][0];
+        return itemName;
     }
     static geographyEntity(recognizerResult) {
         const geoEntity = recognizerResult.entities["geographyV2_city"];

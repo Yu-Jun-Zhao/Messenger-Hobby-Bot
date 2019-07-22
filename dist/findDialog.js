@@ -32,19 +32,19 @@ class FindDialog extends cancelAndHelpDialog_1.default {
     choiceStep(stepContext) {
         return __awaiter(this, void 0, void 0, function* () {
             const youtubeData = stepContext.options;
-            if (!youtubeData.itemType) {
+            if (!youtubeData.itemType && !youtubeData.platform) {
                 return yield stepContext.prompt(CHOOSE_PROMPT, {
-                    prompt: "Video or Products(Not supported yet)",
-                    choices: ["Video", "Products(Not supported yet)"]
+                    prompt: "video or products(Not supported yet)?",
+                    choices: ["video", "product"]
                 });
             }
-            return yield stepContext.next(youtubeData.itemType);
+            return yield stepContext.next({ value: youtubeData.itemType });
         });
     }
     nameStep(stepContext) {
         return __awaiter(this, void 0, void 0, function* () {
             const youtubeData = stepContext.options;
-            youtubeData.itemType = stepContext.result;
+            youtubeData.itemType = stepContext.result.value;
             if (!youtubeData.name) {
                 return yield stepContext.prompt(TEXT_PROMPT, {
                     prompt: `What is the ${youtubeData.itemType} name?`
@@ -57,6 +57,12 @@ class FindDialog extends cancelAndHelpDialog_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             const youtubeData = stepContext.options;
             youtubeData.name = stepContext.result;
+            console.log(youtubeData);
+            if (youtubeData.platform === "youtube") {
+                return yield stepContext.beginDialog(START_VIDEO_WATERFALL, stepContext.options);
+            }
+            else if (youtubeData.platform === "amazon") {
+            }
             if (youtubeData.itemType === "video") {
                 return yield stepContext.beginDialog(START_VIDEO_WATERFALL, stepContext.options);
             }
@@ -82,7 +88,9 @@ class FindVideoDialog extends cancelAndHelpDialog_1.default {
     }
     apiStep(stepContext) {
         return __awaiter(this, void 0, void 0, function* () {
+            const youtubeData = stepContext.options;
             const numOfVideo = stepContext.result;
+            yield stepContext.context.sendActivity(`Searching for ${youtubeData.name} on Youtube. Testing #${numOfVideo}. Testing itemType: ${youtubeData.itemType}. Testing platform: ${youtubeData.platform}`);
             return yield stepContext.endDialog();
         });
     }
