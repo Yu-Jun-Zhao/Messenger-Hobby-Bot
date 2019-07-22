@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const cancelAndHelpDialog_1 = require("./cancelAndHelpDialog");
 const botbuilder_dialogs_1 = require("botbuilder-dialogs");
+const youtubeDataHelper_1 = require("./youtubeDataHelper");
 const FIND_WATERFALL = "findWaterfall";
 const TEXT_PROMPT = "textPrompt";
 const CHOOSE_PROMPT = "choosePrompt";
@@ -57,7 +58,6 @@ class FindDialog extends cancelAndHelpDialog_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             const youtubeData = stepContext.options;
             youtubeData.name = stepContext.result;
-            console.log(youtubeData);
             if (youtubeData.platform === "youtube") {
                 return yield stepContext.beginDialog(START_VIDEO_WATERFALL, stepContext.options);
             }
@@ -89,8 +89,9 @@ class FindVideoDialog extends cancelAndHelpDialog_1.default {
     apiStep(stepContext) {
         return __awaiter(this, void 0, void 0, function* () {
             const youtubeData = stepContext.options;
-            const numOfVideo = stepContext.result;
-            yield stepContext.context.sendActivity(`Searching for ${youtubeData.name} on Youtube. Testing #${numOfVideo}. Testing itemType: ${youtubeData.itemType}. Testing platform: ${youtubeData.platform}`);
+            youtubeData.max = stepContext.result;
+            const youtubeApiRes = youtubeDataHelper_1.default.query(youtubeData);
+            yield stepContext.context.sendActivity(`Searching for ${youtubeData.name} on Youtube. Testing #${youtubeData.max}. Testing itemType: ${youtubeData.itemType}. Testing platform: ${youtubeData.platform}`);
             return yield stepContext.endDialog();
         });
     }

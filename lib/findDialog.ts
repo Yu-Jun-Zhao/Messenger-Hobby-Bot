@@ -8,7 +8,8 @@ import {
   PromptValidatorContext,
   TextPrompt
 } from "botbuilder-dialogs";
-import { YoutubeData } from "./types";
+import { YoutubeReqData } from "./types";
+import YoutubeDataHelper from "./youtubeDataHelper";
 
 const FIND_WATERFALL = "findWaterfall";
 const TEXT_PROMPT = "textPrompt";
@@ -37,7 +38,7 @@ export class FindDialog extends CancelAndHelpDialog {
   }
 
   async choiceStep(stepContext: WaterfallStepContext): Promise<DialogTurnResult> {
-    const youtubeData: YoutubeData = stepContext.options;
+    const youtubeData: YoutubeReqData = stepContext.options;
 
     if (!youtubeData.itemType && !youtubeData.platform) {
       return await stepContext.prompt(CHOOSE_PROMPT, {
@@ -50,7 +51,7 @@ export class FindDialog extends CancelAndHelpDialog {
   }
 
   async nameStep(stepContext: WaterfallStepContext): Promise<DialogTurnResult> {
-    const youtubeData: YoutubeData = stepContext.options;
+    const youtubeData: YoutubeReqData = stepContext.options;
 
     youtubeData.itemType = stepContext.result.value;
     if (!youtubeData.name) {
@@ -63,10 +64,10 @@ export class FindDialog extends CancelAndHelpDialog {
   }
 
   async splitStep(stepContext: WaterfallStepContext): Promise<DialogTurnResult> {
-    const youtubeData: YoutubeData = stepContext.options;
+    const youtubeData: YoutubeReqData = stepContext.options;
 
     youtubeData.name = stepContext.result;
-    console.log(youtubeData);
+    //console.log(youtubeData);
     // platform takes priority
     if (youtubeData.platform === "youtube") {
       return await stepContext.beginDialog(START_VIDEO_WATERFALL, stepContext.options);
@@ -102,11 +103,13 @@ export class FindVideoDialog extends CancelAndHelpDialog {
 
   // handles youtube api
   async apiStep(stepContext: WaterfallStepContext): Promise<DialogTurnResult> {
-    const youtubeData: YoutubeData = stepContext.options;
+    const youtubeData: YoutubeReqData = stepContext.options;
 
-    const numOfVideo = stepContext.result;
+    youtubeData.max = stepContext.result;
+
+    const youtubeApiRes = YoutubeDataHelper.query(youtubeData);
     await stepContext.context.sendActivity(
-      `Searching for ${youtubeData.name} on Youtube. Testing #${numOfVideo}. Testing itemType: ${
+      `Searching for ${youtubeData.name} on Youtube. Testing #${youtubeData.max}. Testing itemType: ${
         youtubeData.itemType
       }. Testing platform: ${youtubeData.platform}`
     );

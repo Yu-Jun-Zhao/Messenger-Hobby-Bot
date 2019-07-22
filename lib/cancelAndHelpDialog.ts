@@ -23,10 +23,10 @@ class CancelAndHelpDialog extends ComponentDialog {
   async interrupt(innerDialogContext: DialogContext): Promise<DialogTurnResult> {
     const text = innerDialogContext.context.activity.text.toLowerCase();
     switch (text) {
-      case "help":
+      case "menu":
       case "?":
         await innerDialogContext.context.sendActivity(
-          "You could \n1. Weather Forecast. Ask me: What is the weather?\nOR Type quit to quit. "
+          "You could \n1. Weather Forecast. Ask me: What is the weather?\n2. Find video on Youtube. Ask me: Find me TITLE on youtube.\nOR Type quit to quit. "
         );
         return { status: DialogTurnStatus.waiting };
       //return await innerDialogContext.cancelAllDialogs();
