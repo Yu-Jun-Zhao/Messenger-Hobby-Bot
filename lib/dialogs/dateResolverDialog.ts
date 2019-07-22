@@ -10,7 +10,7 @@ import {
 } from "botbuilder-dialogs";
 import moment = require("moment");
 import momentTimezone = require("moment-timezone");
-import { DateData } from "./types";
+import { DateData } from "../types";
 
 const WATERFALL_DIALOG = "waterFallDialog";
 const CHOICE_PROMPT = "choicePrompt";

@@ -1,9 +1,9 @@
 import CancelAndHelpDialog from "./cancelAndHelpDialog";
 import { TextPrompt, WaterfallDialog, WaterfallStepContext, DialogTurnResult } from "botbuilder-dialogs";
-import QnAHelper from "./qnaHelper";
+import QnAHelper from "../helpers/qnaHelper";
 import { QnAMakerResult } from "botbuilder-ai";
-import LuisHelper from "./luisHelper";
-import { IntentDetail, WeatherData } from "./types";
+import LuisHelper from "../helpers/luisHelper";
+import { IntentDetail, WeatherData } from "../types";
 import SearchWeatherDialog from "./searchWeatherDialog";
 import { FindDialog } from "./findDialog";
 

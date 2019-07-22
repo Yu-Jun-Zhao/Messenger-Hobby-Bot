@@ -1,8 +1,8 @@
 import * as restify from "restify";
 import { config } from "dotenv";
 import { BotFrameworkAdapter, ConversationState, MemoryStorage, UserState } from "botbuilder";
-import HobbyBot from "./hobbyBot";
-import MainDialog from "./MainDialog";
+import HobbyBot from "./dialogs/hobbyBot";
+import MainDialog from "./dialogs/MainDialog";
 
 config();
 

@@ -26,10 +26,10 @@ class CancelAndHelpDialog extends ComponentDialog {
       case "menu":
       case "?":
         await innerDialogContext.context.sendActivity(
-          "You could \n1. Weather Forecast. Ask me: What is the weather?\n2. Find video on Youtube. Ask me: Find me TITLE on youtube.\nOR Type quit to quit. "
+          "You could \n1. Weather Forecast. Ask me: What is the weather?\n2. Find video on Youtube. Ask me: Find me TITLE on youtube.\n3. Type quit to quit."
         );
-        return { status: DialogTurnStatus.waiting };
-      //return await innerDialogContext.cancelAllDialogs();
+        //return { status: DialogTurnStatus.waiting };
+        return await innerDialogContext.cancelAllDialogs();
       case "cancel":
       case "quit":
         await innerDialogContext.context.sendActivity("Cancelling");

@@ -8,8 +8,8 @@ import {
   PromptValidatorContext,
   TextPrompt
 } from "botbuilder-dialogs";
-import { YoutubeReqData } from "./types";
-import YoutubeDataHelper from "./youtubeDataHelper";
+import { YoutubeReqData } from "../types";
+import YoutubeDataHelper from "../helpers/youtubeDataHelper";
 
 const FIND_WATERFALL = "findWaterfall";
 const TEXT_PROMPT = "textPrompt";

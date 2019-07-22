@@ -1,7 +1,7 @@
 import CancelAndHelpDialog from "./cancelAndHelpDialog";
 import { WaterfallDialog, WaterfallStepContext, DialogTurnResult, TextPrompt } from "botbuilder-dialogs";
-import { WeatherData, DateData } from "./types";
-import LocationSearch from "./locationSearch";
+import { WeatherData, DateData } from "../types";
+import LocationSearch from "../helpers/locationSearch";
 import DateResolverDialog from "./dateResolverDialog";
 import axios from "axios";
 import moment = require("moment");
