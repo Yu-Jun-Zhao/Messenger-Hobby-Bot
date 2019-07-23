@@ -4,10 +4,10 @@
   "description": "Messenger Bot for hobby related work",
   "main": "server.js",
   "scripts": {
-    "start": "node ./server.js",
+    "start": "node ./dist/bundle.js",
     "build": "./node_modules/.bin/tsc",
     "buildpack": "./node_modules/.bin/webpack --config webpack.config.js",
-    "server": "node ./dist/bundle.js"
+    "server": "node ./server.js"
   },
   "author": "Yu Jun Zhao",
   "license": "ISC",
