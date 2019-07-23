@@ -11,7 +11,6 @@ const WATERFALL_DIALOG = "waterFallDialog";
 const TEXT_PROMPT = "textPrompt";
 const SEARCH_WEATHER_DIALOG = "searchWeatherDialog";
 const FIND_DIALOG = "findDialog";
-const FIND_VIDEO_DIALOG = "findVideoDialog";
 
 class RegularDialog extends CancelAndHelpDialog {
   private _qnaHelper: QnAHelper;

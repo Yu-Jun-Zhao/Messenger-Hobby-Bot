@@ -98,7 +98,7 @@ class SearchWeatherDialog extends CancelAndHelpDialog {
   async apiStep(stepContext: WaterfallStepContext): Promise<DialogTurnResult> {
     const weatherDetails: WeatherData = stepContext.options;
     weatherDetails.date = stepContext.result;
-    console.log(weatherDetails.date);
+
     let weather;
     let temperature;
     try {

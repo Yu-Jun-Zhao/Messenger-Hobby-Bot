@@ -10,6 +10,8 @@ import {
 } from "botbuilder-dialogs";
 import { YoutubeReqData } from "../types";
 import YoutubeDataHelper from "../helpers/youtubeDataHelper";
+import { createAdaptiveCards, createAnimationCards } from "../helpers/cardHelper";
+import { Attachment } from "botbuilder";
 
 const FIND_WATERFALL = "findWaterfall";
 const TEXT_PROMPT = "textPrompt";
@@ -56,7 +58,7 @@ export class FindDialog extends CancelAndHelpDialog {
     youtubeData.itemType = stepContext.result.value;
     if (!youtubeData.name) {
       return await stepContext.prompt(TEXT_PROMPT, {
-        prompt: `What is the ${youtubeData.itemType} name?`
+        prompt: `What is the name?`
       });
     }
 
@@ -107,12 +109,15 @@ export class FindVideoDialog extends CancelAndHelpDialog {
 
     youtubeData.max = stepContext.result;
 
-    const youtubeApiRes = YoutubeDataHelper.query(youtubeData);
-    await stepContext.context.sendActivity(
-      `Searching for ${youtubeData.name} on Youtube. Testing #${youtubeData.max}. Testing itemType: ${
-        youtubeData.itemType
-      }. Testing platform: ${youtubeData.platform}`
-    );
+    const youtubeApiRes = await YoutubeDataHelper.query(youtubeData);
+
+    // decide what to make
+    // if searching for more than 2 videos, it will show links else it will show videos
+    const attachmentsCards: Attachment[] =
+      youtubeApiRes.length > 2 ? createAdaptiveCards(youtubeApiRes) : createAnimationCards(youtubeApiRes);
+    await stepContext.context.sendActivity({
+      attachments: attachmentsCards
+    });
 
     return await stepContext.endDialog();
   }

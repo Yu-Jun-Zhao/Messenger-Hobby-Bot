@@ -1,6 +1,7 @@
 import * as restify from "restify";
 import { config } from "dotenv";
 import { BotFrameworkAdapter, ConversationState, MemoryStorage, UserState } from "botbuilder";
+import { BlobStorage } from "botbuilder-azure";
 import HobbyBot from "./dialogs/hobbyBot";
 import MainDialog from "./dialogs/MainDialog";
 
@@ -17,9 +18,14 @@ adapter.onTurnError = async (context, error) => {
   await conversationState.delete(context);
 };
 
-const memoryStorage: MemoryStorage = new MemoryStorage();
-const conversationState: ConversationState = new ConversationState(memoryStorage);
-const userState = new UserState(memoryStorage);
+//const memoryStorage: MemoryStorage = new MemoryStorage();
+const blobStorage = new BlobStorage({
+  containerName: process.env.CONTAINER,
+  storageAccountOrConnectionString: process.env.STORAGENAME
+});
+
+const conversationState: ConversationState = new ConversationState(blobStorage);
+const userState = new UserState(blobStorage);
 
 // name for bot
 const NAME = "Clover";

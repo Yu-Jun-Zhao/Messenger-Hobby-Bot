@@ -1,6 +1,6 @@
 import { LuisRecognizer } from "botbuilder-ai";
 import { TurnContext, RecognizerResult } from "botbuilder";
-import { IntentDetail, DateData } from "./types";
+import { IntentDetail, DateData } from "../types";
 import moment = require("moment");
 import momentTimezone = require("moment-timezone");
 

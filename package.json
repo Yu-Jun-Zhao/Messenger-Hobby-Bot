@@ -15,13 +15,18 @@
     "axios": "^0.19.0",
     "botbuilder": "^4.4.0",
     "botbuilder-ai": "^4.4.0",
+    "botbuilder-azure": "^4.5.1",
     "botbuilder-dialogs": "^4.4.0",
     "country-list": "^2.1.1",
     "dotenv": "^8.0.0",
     "googleapis": "^41.0.1",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.26",
-    "restify": "^8.3.3",
-    "typescript": "^3.5.2"
+    "restify": "^8.3.3"
+  },
+  "devDependencies": {
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.5.3",
+    "webpack": "^4.36.1"
   }
 }

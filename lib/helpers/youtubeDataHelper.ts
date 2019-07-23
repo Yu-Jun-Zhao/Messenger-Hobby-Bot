@@ -1,5 +1,5 @@
 import { google } from "googleapis";
-import { YoutubeReqData, YoutubeResponseData } from "./types";
+import { YoutubeReqData, YoutubeResponseData } from "../types";
 import axios from "axios";
 import moment = require("moment");
 
@@ -15,7 +15,8 @@ class YoutubeDataHelper {
       q: reqData.name,
       maxResults: reqData.max,
       order: "relevance",
-      videoDuration: "any"
+      videoDuration: "any",
+      type: "video"
     });
 
     const youtubeResults: YoutubeResponseData[] = [];
@@ -27,6 +28,7 @@ class YoutubeDataHelper {
           process.env.youtubeAPIKey
         }`
       );
+      //console.log(item.id.videoId);
 
       let duration;
       if (contentRes.data.items) {
@@ -44,7 +46,7 @@ class YoutubeDataHelper {
       youtubeResults.push(youtubeResponseData);
     }
 
-    console.log(youtubeResults);
+    //console.log(youtubeResults);
 
     return youtubeResults;
   }
