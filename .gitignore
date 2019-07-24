@@ -68,7 +68,8 @@ luis/*.json
 .qnamakerrc
 .luisrc
 build
-lib
+dist
+
 
 
 upload.zip
